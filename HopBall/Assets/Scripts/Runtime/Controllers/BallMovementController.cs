@@ -1,27 +1,22 @@
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BallMovementController : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
-    private Vector3 lastVelocity;
-    public Vector3 ballDirection;
+    internal Vector3 ballDirection;
+    private Vector3[] _startDirections = new Vector3[2];
+    
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _startDirections = new[] { Vector3.right, Vector3.left };
     }
 
-    private void Update()
+    private void Start()
     {
-        lastVelocity = _rigidbody.velocity;
+        _rigidbody.AddForce(_startDirections[Random.Range(0,1)] * 150f);
     }
-
-    private void OnCollisionEnter2D(Collision2D coll)
-    {
-        var speed = lastVelocity.magnitude;
-        ballDirection = Vector3.Reflect(lastVelocity.normalized, coll.contacts[0].normal);
-       // _rigidbody.velocity = ballDirection * Mathf.Max(speed, 0f);        
-    }
-
     public void Shoot(Vector3 direction, float speed)
     {
         _rigidbody.AddForce(new Vector2(direction.x,direction.y) * speed);

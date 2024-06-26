@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class BlockMovementController : MonoBehaviour
@@ -57,7 +56,7 @@ public class BlockMovementController : MonoBehaviour
     {
         if (coll.gameObject.TryGetComponent(out BallMovementController ball))
         {
-            ball.Shoot(ball.ballDirection,_slideSpeed);
+            ball.Shoot(-ball.ballDirection,_slideSpeed);
         }
     }
 }
