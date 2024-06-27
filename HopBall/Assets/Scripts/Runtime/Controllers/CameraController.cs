@@ -15,24 +15,40 @@ namespace Runtime.Controllers
         {
             if (target == null)
             {
+                Debug.LogError("Target not set for CameraFollow.");
                 enabled = false;
                 return;
             }
 
-            _initialY = transform.position.y;
+            _initialY = cameraTransform.position.y;
         }
 
         private void LateUpdate()
         {
-            Vector3 desiredPosition = target.position + offset;
+            if (target == null)
+            {
+                return;
+            }
+
+            Vector3 desiredPosition = GetDesiredPosition();
             Vector3 currentPosition = cameraTransform.position;
 
             if (desiredPosition.y > _initialY)
             {
-                float newY = Mathf.Max(currentPosition.y, desiredPosition.y);
-                Vector3 newPosition = new Vector3(currentPosition.x, newY, currentPosition.z);
+                Vector3 newPosition = GetNewPosition(desiredPosition, currentPosition);
                 cameraTransform.position = Vector3.Lerp(currentPosition, newPosition, smoothSpeed);
             }
+        }
+
+        private Vector3 GetDesiredPosition()
+        {
+            return target.position + offset;
+        }
+
+        private Vector3 GetNewPosition(Vector3 desiredPosition, Vector3 currentPosition)
+        {
+            float newY = Mathf.Max(currentPosition.y, desiredPosition.y);
+            return new Vector3(currentPosition.x, newY, currentPosition.z);
         }
     }
 }
