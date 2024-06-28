@@ -1,4 +1,3 @@
-using System;
 using Runtime.Signals;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,10 +9,9 @@ namespace Runtime.Physics
         [SerializeField] private float bounceFactor = 1.5f;
         [SerializeField] private float initialForceMagnitude = 5.0f;
         [SerializeField] private float maxSpeed = 10.0f;
-
-        private Vector3 _initialForce;
+        
         private Rigidbody _rigidbody;
-
+        private Vector3 _initialPosition;
         private void OnEnable()
         {
             CoreGameSignals.Instance.OnGameStart += OnGameStart;
@@ -29,8 +27,8 @@ namespace Runtime.Physics
 
         private void Start()
         {
+            _initialPosition = transform.position;
             _rigidbody = GetComponent<Rigidbody>();
-            _rigidbody.AddForce(_initialForce,ForceMode.Impulse);
             _rigidbody.useGravity = false;
         }
 
@@ -67,15 +65,17 @@ namespace Runtime.Physics
 
         private void OnGameRestart()
         {
-            _rigidbody.useGravity = false;
-            transform.position = new Vector3(0, 3, 0);
+            _rigidbody.isKinematic = true;
+            transform.position = Vector3.zero;
         }
 
         private void OnGameStart()
         {
             _rigidbody.useGravity = true;
+            _rigidbody.isKinematic = false;
             float randomDirection = Random.Range(0, 2) == 0 ? -1.0f : 1.0f;
-            _initialForce = new Vector3(randomDirection, 0.5f, 0) * initialForceMagnitude;
+            Vector3 initialForce = new Vector3(randomDirection, 0.5f, 0) * initialForceMagnitude;
+            _rigidbody.AddForce(initialForce,ForceMode.Impulse);
         }
     }    
 }

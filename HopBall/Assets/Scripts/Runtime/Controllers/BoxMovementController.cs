@@ -27,7 +27,7 @@ namespace Runtime.Controllers
                 Touch touch = Input.GetTouch(i);
                 Ray ray = _mainCamera.ScreenPointToRay(touch.position);
 
-                if (Input.touchCount == 2)
+                if (touch.phase == TouchPhase.Began && Input.touchCount == 2)
                 {
                     CoreGameSignals.Instance.OnGameStart?.Invoke();
                 }
@@ -46,8 +46,6 @@ namespace Runtime.Controllers
                         break;
                 }
             }
-            if(_selectedObjects.Count == 2)
-                CoreGameSignals.Instance.OnGameStart?.Invoke();
         }
 
         private void HandleTouchBegan(Touch touch, Ray ray)

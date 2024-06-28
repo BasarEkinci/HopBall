@@ -73,13 +73,8 @@ namespace Runtime.Managers
 
         private void OnGameOver()
         {
-            if(gamePanel.activeSelf)
-                gamePanel.SetActive(false);
-            if(!endGamePanel.activeSelf)
-                gamePanel.SetActive(true);
-            
-            Debug.Log("GameOver");
-            
+            gamePanel.SetActive(false);
+            endGamePanel.SetActive(true);
             currentScoreText.text = "Skor : " + _currentScore;
             highScoreText.text = "Rekor : " + _highScore;
         }
@@ -87,8 +82,9 @@ namespace Runtime.Managers
         {
             if(!gamePanel.activeSelf)
                 gamePanel.SetActive(true);
+            
             if(endGamePanel.activeSelf)
-                gamePanel.SetActive(false);
+                endGamePanel.SetActive(false);
             
             previousHighScoreText.text = _highScore + "m";
             _score = 0;
@@ -99,7 +95,7 @@ namespace Runtime.Managers
             if(!gamePanel.activeSelf)
                 gamePanel.SetActive(true);
             if(endGamePanel.activeSelf)
-                gamePanel.SetActive(false);
+                endGamePanel.SetActive(false);
 
             coinText.text = _coinAmount.ToString();
         }
