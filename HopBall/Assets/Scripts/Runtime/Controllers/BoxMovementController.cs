@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Runtime.Signals;
 using UnityEngine;
 
 namespace Runtime.Controllers
@@ -13,7 +14,7 @@ namespace Runtime.Controllers
 
         private Camera _mainCamera;
         private readonly Dictionary<int, SelectedObjectData> _selectedObjects = new Dictionary<int, SelectedObjectData>();
-
+        
         private void Start()
         {
             _mainCamera = Camera.main;
@@ -26,6 +27,11 @@ namespace Runtime.Controllers
                 Touch touch = Input.GetTouch(i);
                 Ray ray = _mainCamera.ScreenPointToRay(touch.position);
 
+                if (Input.touchCount == 2)
+                {
+                    CoreGameSignals.Instance.OnGameStart?.Invoke();
+                }
+                
                 switch (touch.phase)
                 {
                     case TouchPhase.Began:
@@ -40,14 +46,15 @@ namespace Runtime.Controllers
                         break;
                 }
             }
+            if(_selectedObjects.Count == 2)
+                CoreGameSignals.Instance.OnGameStart?.Invoke();
         }
 
         private void HandleTouchBegan(Touch touch, Ray ray)
         {
-            
             if (UnityEngine.Physics.Raycast(ray, out RaycastHit hit))
             {
-                if (hit.collider != null)
+                if (hit.collider != null && hit.collider.CompareTag("Box"))
                 {
                     var selectedObject = new SelectedObjectData
                     {

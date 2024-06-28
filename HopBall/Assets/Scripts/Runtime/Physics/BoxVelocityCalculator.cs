@@ -24,7 +24,6 @@ namespace Runtime.Physics
                         HandleTouchBegan(touch);
                         break;
                     case TouchPhase.Moved:
-                        Debug.Log(SwipeVelocity);
                         HandleTouchMoved(touch);
                         break;
                     case TouchPhase.Ended:

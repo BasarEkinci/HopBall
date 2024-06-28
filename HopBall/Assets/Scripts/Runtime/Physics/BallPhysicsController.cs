@@ -1,8 +1,9 @@
-using Runtime.Physics;
+using System;
+using Runtime.Signals;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Runtime.Controllers
+namespace Runtime.Physics
 {
     public class BallPhysicsController : MonoBehaviour
     {
@@ -10,26 +11,36 @@ namespace Runtime.Controllers
         [SerializeField] private float initialForceMagnitude = 5.0f;
         [SerializeField] private float maxSpeed = 10.0f;
 
-        private float _forceScale = 0.01f;
-
+        private Vector3 _initialForce;
         private Rigidbody _rigidbody;
+
+        private void OnEnable()
+        {
+            CoreGameSignals.Instance.OnGameStart += OnGameStart;
+            CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
+            CoreGameSignals.Instance.OnGameOver += OnGameOver;
+        }
+        private void OnDisable()
+        {
+            CoreGameSignals.Instance.OnGameStart -= OnGameStart;
+            CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;
+            CoreGameSignals.Instance.OnGameOver -= OnGameOver;
+        }
 
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
-
-            float randomDirection = Random.Range(0, 2) == 0 ? -1.0f : 1.0f;
-            Vector3 initialForce = new Vector3(randomDirection, 0.5f, 0) * initialForceMagnitude;
-            _rigidbody.AddForce(initialForce, ForceMode.Impulse);
+            _rigidbody.AddForce(_initialForce,ForceMode.Impulse);
+            _rigidbody.useGravity = false;
         }
 
         private void OnCollisionEnter(Collision collision)
         {
 
-            if (collision.gameObject.TryGetComponent<BoxVelocityCalculator>(out BoxVelocityCalculator Box))
+            if (collision.gameObject.TryGetComponent<BoxVelocityCalculator>(out BoxVelocityCalculator box))
             {
                 Vector3 collisionNormal = collision.contacts[0].normal;
-                float collisionSpeed = Box.SwipeVelocity.magnitude + _rigidbody.velocity.magnitude;
+                float collisionSpeed = box.SwipeVelocity.magnitude + _rigidbody.velocity.magnitude;
                 
                 Vector3 bounceForce = collisionNormal * collisionSpeed * bounceFactor;
                 _rigidbody.AddForce(bounceForce, ForceMode.Impulse);
@@ -39,6 +50,32 @@ namespace Runtime.Controllers
                     _rigidbody.velocity = _rigidbody.velocity.normalized * maxSpeed;
                 }
             }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("LowerBound"))
+            {
+                CoreGameSignals.Instance.OnGameOver?.Invoke();
+            }
+        }
+        
+        private void OnGameOver()
+        {
+            _rigidbody.useGravity = false;
+        }
+
+        private void OnGameRestart()
+        {
+            _rigidbody.useGravity = false;
+            transform.position = new Vector3(0, 3, 0);
+        }
+
+        private void OnGameStart()
+        {
+            _rigidbody.useGravity = true;
+            float randomDirection = Random.Range(0, 2) == 0 ? -1.0f : 1.0f;
+            _initialForce = new Vector3(randomDirection, 0.5f, 0) * initialForceMagnitude;
         }
     }    
 }
