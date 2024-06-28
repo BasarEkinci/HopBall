@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Runtime.Controllers
 {
-    public class CameraController : MonoBehaviour
+    public class CameraMovementController : MonoBehaviour
     {
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform target;
@@ -15,7 +15,6 @@ namespace Runtime.Controllers
         {
             if (target == null)
             {
-                Debug.LogError("Target not set for CameraFollow.");
                 enabled = false;
                 return;
             }

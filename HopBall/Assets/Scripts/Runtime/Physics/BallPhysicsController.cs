@@ -1,4 +1,6 @@
+using Runtime.Physics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Runtime.Controllers
 {
@@ -7,6 +9,8 @@ namespace Runtime.Controllers
         [SerializeField] private float bounceFactor = 1.5f;
         [SerializeField] private float initialForceMagnitude = 5.0f;
         [SerializeField] private float maxSpeed = 10.0f;
+
+        private float _forceScale = 0.01f;
 
         private Rigidbody _rigidbody;
 
@@ -21,15 +25,19 @@ namespace Runtime.Controllers
 
         private void OnCollisionEnter(Collision collision)
         {
-            Vector3 collisionNormal = collision.contacts[0].normal;
-            float collisionSpeed = collision.relativeVelocity.magnitude;
 
-            Vector3 bounceForce = collisionNormal * Mathf.Min(collisionSpeed, maxSpeed) * bounceFactor;
-            _rigidbody.AddForce(bounceForce, ForceMode.Impulse);
-            
-            if (_rigidbody.velocity.magnitude > maxSpeed)
+            if (collision.gameObject.TryGetComponent<BoxVelocityCalculator>(out BoxVelocityCalculator Box))
             {
-                _rigidbody.velocity = _rigidbody.velocity.normalized * maxSpeed;
+                Vector3 collisionNormal = collision.contacts[0].normal;
+                float collisionSpeed = Box.SwipeVelocity.magnitude + _rigidbody.velocity.magnitude;
+                
+                Vector3 bounceForce = collisionNormal * collisionSpeed * bounceFactor;
+                _rigidbody.AddForce(bounceForce, ForceMode.Impulse);
+                
+                if (_rigidbody.velocity.magnitude > maxSpeed)
+                {
+                    _rigidbody.velocity = _rigidbody.velocity.normalized * maxSpeed;
+                }
             }
         }
     }    

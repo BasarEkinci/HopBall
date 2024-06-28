@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Runtime.Controllers
 {
-    public class TouchController : MonoBehaviour
+    public class BoxMovementController : MonoBehaviour
     {
         private class SelectedObjectData
         {
@@ -44,7 +44,8 @@ namespace Runtime.Controllers
 
         private void HandleTouchBegan(Touch touch, Ray ray)
         {
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            
+            if (UnityEngine.Physics.Raycast(ray, out RaycastHit hit))
             {
                 if (hit.collider != null)
                 {
