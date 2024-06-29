@@ -46,11 +46,6 @@ namespace Runtime.Controllers
 
         private void LateUpdate()
         {
-            if (target == null)
-            {
-                return;
-            }
-
             Vector3 desiredPosition = GetDesiredPosition();
             Vector3 currentPosition = camera.transform.position;
 

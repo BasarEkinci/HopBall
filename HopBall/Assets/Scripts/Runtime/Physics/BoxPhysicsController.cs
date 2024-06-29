@@ -2,16 +2,20 @@ using UnityEngine;
 
 namespace Runtime.Physics
 {
-    public class BoxVelocityCalculator : MonoBehaviour
+    public class BoxPhysicsController : MonoBehaviour
     {
+        [SerializeField] private float forceMagnitude;
+        [SerializeField] private float forceDegree;
+        
+        
         private Vector2 _startTouchPosition;
         private Vector2 _currentTouchPosition;
         private Vector2 _previousTouchPosition;
         private float _startTime;
         private float _previousTime;
-        private const float _swipeVelocityScale = 0.0001f;
+        private const float SwipeVelocityScale = 0.0000001f;
 
-        public Vector2 SwipeVelocity { get; private set; }
+        private Vector2 _swipeVelocity; 
 
         private void Update()
         {
@@ -34,6 +38,12 @@ namespace Runtime.Physics
             }
         }
 
+        private void OnCollisionEnter(Collision other)
+        {
+            other.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(forceDegree, 90, 0) * (forceMagnitude + Mathf.Abs(_swipeVelocity.y * SwipeVelocityScale)),
+                ForceMode.Force);
+        }
+
         private void HandleTouchBegan(Touch touch)
         {
             _startTouchPosition = touch.position;
@@ -50,15 +60,15 @@ namespace Runtime.Physics
             Vector2 displacement = _currentTouchPosition - _previousTouchPosition;
             float deltaTime = currentTime - _previousTime;
 
-            SwipeVelocity = displacement / deltaTime * _swipeVelocityScale;
-
+            _swipeVelocity = displacement / deltaTime;
+            ;
             _previousTouchPosition = _currentTouchPosition;
             _previousTime = currentTime;
         }
 
         private void HandleTouchEnded()
         {
-            SwipeVelocity = Vector2.zero;
+            _swipeVelocity = Vector2.zero;
         }
     }
 }

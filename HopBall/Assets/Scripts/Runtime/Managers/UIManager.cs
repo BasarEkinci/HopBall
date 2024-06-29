@@ -9,6 +9,7 @@ namespace Runtime.Managers
         [SerializeField] private GameObject ball;
         [SerializeField] private GameObject gamePanel;
         [SerializeField] private GameObject endGamePanel;
+        [SerializeField] private Transform previousHighScoreTextTransform;
         
         [SerializeField] private TextMeshPro previousHighScoreText;
 
@@ -63,6 +64,7 @@ namespace Runtime.Managers
         public void RestartButton()
         {
             CoreGameSignals.Instance.OnGameRestart?.Invoke();
+            previousHighScoreTextTransform.position = new Vector3(-0.3f, _highScore, 0.8f);
         }
 
         private void OnCollectCoin()
