@@ -32,8 +32,9 @@ namespace Runtime.Controllers
 
         private void Start()
         {
-            _leftBoxStartPosition = boxes[0].transform.position;
-            _rightBoxStartPosition = boxes[1].transform.position;
+            _rightBoxStartPosition = new Vector3(2, 0, 0);
+            _leftBoxStartPosition = new Vector3(-2, 0, 0);
+
             _startPosition = camera.transform.position;
             if (target == null)
             {
@@ -70,8 +71,8 @@ namespace Runtime.Controllers
         private void OnGameRestart()
         {
             camera.transform.position = _startPosition;
-            _leftBoxStartPosition = boxes[0].transform.position ;
-            _rightBoxStartPosition = boxes[1].transform.position;
+            boxes[1].transform.position = _rightBoxStartPosition;
+            boxes[0].transform.position = _leftBoxStartPosition;
         }
 
         private void OnGameStart()

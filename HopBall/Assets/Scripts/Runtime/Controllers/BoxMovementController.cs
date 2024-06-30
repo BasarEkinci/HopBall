@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Runtime.Signals;
 using UnityEngine;
@@ -14,10 +15,26 @@ namespace Runtime.Controllers
 
         private Camera _mainCamera;
         private readonly Dictionary<int, SelectedObjectData> _selectedObjects = new Dictionary<int, SelectedObjectData>();
-        
+        private int _selectedObjectCount = 0;
+        private bool _isGameStarted = false;
         private void Start()
         {
             _mainCamera = Camera.main;
+        }
+
+        private void OnEnable()
+        {
+            CoreGameSignals.Instance.OnGameOver += OnGameOver;
+        }
+
+        private void OnDisable()
+        {
+            CoreGameSignals.Instance.OnGameOver -= OnGameOver;
+        }
+
+        private void OnGameOver()
+        {
+            _isGameStarted = false;
         }
 
         private void Update()
@@ -27,15 +44,15 @@ namespace Runtime.Controllers
                 Touch touch = Input.GetTouch(i);
                 Ray ray = _mainCamera.ScreenPointToRay(touch.position);
 
-                if (touch.phase == TouchPhase.Began && Input.touchCount == 2)
-                {
-                    CoreGameSignals.Instance.OnGameStart?.Invoke();
-                }
-                
                 switch (touch.phase)
                 {
                     case TouchPhase.Began:
                         HandleTouchBegan(touch, ray);
+                        if (_selectedObjectCount == 2 && !_isGameStarted)
+                        {
+                            CoreGameSignals.Instance.OnGameStart?.Invoke();
+                            _isGameStarted = true;
+                        }
                         break;
                     case TouchPhase.Moved:
                         HandleTouchMoved(touch, ray);
@@ -57,9 +74,10 @@ namespace Runtime.Controllers
                     var selectedObject = new SelectedObjectData
                     {
                         GameObject = hit.collider.gameObject,
-                        Offset = hit.collider.gameObject.transform.position - hit.point
+                        Offset = hit.collider.gameObject.transform.position - hit.point,
                     };
                     _selectedObjects[touch.fingerId] = selectedObject;
+                    _selectedObjectCount = _selectedObjects.Count;
                 }
             }
         }
@@ -73,10 +91,10 @@ namespace Runtime.Controllers
                 selectedObject.GameObject.transform.position = newPosition;
             }
         }
-
         private void HandleTouchEnded(Touch touch)
         {
             _selectedObjects.Remove(touch.fingerId);
+            _selectedObjectCount = _selectedObjects.Count;
         }
     }
 }

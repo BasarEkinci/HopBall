@@ -7,7 +7,6 @@ namespace Runtime.Physics
         [SerializeField] private float forceMagnitude;
         [SerializeField] private float forceDegree;
         
-        
         private Vector2 _startTouchPosition;
         private Vector2 _currentTouchPosition;
         private Vector2 _previousTouchPosition;
@@ -16,7 +15,7 @@ namespace Runtime.Physics
         private const float SwipeVelocityScale = 0.0000001f;
 
         private Vector2 _swipeVelocity; 
-
+        
         private void Update()
         {
             if (Input.touchCount > 0)
@@ -40,8 +39,13 @@ namespace Runtime.Physics
 
         private void OnCollisionEnter(Collision other)
         {
-            other.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(forceDegree, 90, 0) * (forceMagnitude + Mathf.Abs(_swipeVelocity.y * SwipeVelocityScale)),
-                ForceMode.Force);
+            if(other.gameObject.CompareTag("Ball"))
+            {
+                other.gameObject.GetComponent<Rigidbody>().AddForce(
+                    new Vector3(forceDegree, 90, 0) *
+                    (forceMagnitude + Mathf.Abs(_swipeVelocity.y * SwipeVelocityScale)));
+            }
+
         }
 
         private void HandleTouchBegan(Touch touch)
@@ -61,7 +65,7 @@ namespace Runtime.Physics
             float deltaTime = currentTime - _previousTime;
 
             _swipeVelocity = displacement / deltaTime;
-            ;
+            
             _previousTouchPosition = _currentTouchPosition;
             _previousTime = currentTime;
         }

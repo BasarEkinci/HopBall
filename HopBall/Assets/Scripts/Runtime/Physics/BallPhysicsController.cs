@@ -1,5 +1,6 @@
 using Runtime.Signals;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using Random = UnityEngine.Random;
 
 namespace Runtime.Physics
@@ -8,9 +9,11 @@ namespace Runtime.Physics
     {
         [SerializeField] private float initialForceMagnitude = 5.0f;
         [SerializeField] private float maxSpeed = 10.0f;
+        [SerializeField] private ParticleSystem impactEffect;
         
         private Rigidbody _rigidbody;
         private Vector3 _initialPosition;
+        
         private void OnEnable()
         {
             CoreGameSignals.Instance.OnGameStart += OnGameStart;
@@ -31,6 +34,12 @@ namespace Runtime.Physics
             _rigidbody.useGravity = false;
         }
 
+        private void OnCollisionEnter(Collision other)
+        {
+            impactEffect.transform.position = other.GetContact(0).point;
+            impactEffect.transform.rotation = Quaternion.LookRotation(-other.GetContact(0).normal);
+            impactEffect.Play();
+        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -57,7 +66,6 @@ namespace Runtime.Physics
             _rigidbody.isKinematic = false;
             float randomDirection = Random.Range(0, 2) == 0 ? -1.0f : 1.0f;
             Vector3 initialForce = new Vector3(randomDirection, 0.5f, 0) * initialForceMagnitude;
-            Debug.Log(initialForce);
             _rigidbody.AddForce(initialForce);
         }
     }    
