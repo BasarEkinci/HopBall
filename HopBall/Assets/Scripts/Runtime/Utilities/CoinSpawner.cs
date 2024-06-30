@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Runtime.Signals;
 using UnityEngine;
@@ -11,28 +10,36 @@ namespace Runtime.Utilities
         [SerializeField] private GameObject coin;
         [SerializeField] private GameObject coinsParent;
         [SerializeField] private List<Transform> coinSpawnPoints;
-
+        
+        private bool _isGameStarted;
+        
         private void OnEnable()
         {
             CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
+            CoreGameSignals.Instance.OnGameOver += OnGameOver;
         }
 
         private void OnDisable()
         {
             CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;
+            CoreGameSignals.Instance.OnGameOver -= OnGameOver;
         }
-
+        private void Start()
+        {
+            InvokeRepeating(nameof(SpawnCoin),0,10);
+        }
+        
+        private void OnGameOver()
+        {
+            _isGameStarted = false;            
+        }
         private void OnGameRestart()
         {
             foreach (Transform coin in coinsParent.transform)
             {
                 Destroy(coin.gameObject);
             }
-        }
-
-        private void Start()
-        {
-            InvokeRepeating(nameof(SpawnCoin),0,10);
+            _isGameStarted = true;
         }
         private void SpawnCoin()
         {

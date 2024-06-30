@@ -24,18 +24,15 @@ namespace Runtime.Controllers
 
         private void OnEnable()
         {
-            CoreGameSignals.Instance.OnGameOver += OnGameOver;
+            CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
         }
 
         private void OnDisable()
         {
-            CoreGameSignals.Instance.OnGameOver -= OnGameOver;
+            CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;
         }
 
-        private void OnGameOver()
-        {
-            _isGameStarted = false;
-        }
+
 
         private void Update()
         {
@@ -95,6 +92,11 @@ namespace Runtime.Controllers
         {
             _selectedObjects.Remove(touch.fingerId);
             _selectedObjectCount = _selectedObjects.Count;
+        }
+        
+        private void OnGameRestart()
+        {
+            _isGameStarted = false;
         }
     }
 }

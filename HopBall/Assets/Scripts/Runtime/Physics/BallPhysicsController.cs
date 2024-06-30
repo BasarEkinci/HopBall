@@ -7,7 +7,6 @@ namespace Runtime.Physics
     public class BallPhysicsController : MonoBehaviour
     {
         [SerializeField] private float initialForceMagnitude = 5.0f;
-        [SerializeField] private float maxSpeed = 10.0f;
         [SerializeField] private ParticleSystem impactEffect;
         
         private Rigidbody _rigidbody;

@@ -50,7 +50,7 @@ namespace Runtime.Managers
             {
                 _currentScore = _score;
             }
-            scoreText.text = _currentScore.ToString() + "m";
+            scoreText.text = _currentScore + "m";
         }
 
         private void OnDisable()
