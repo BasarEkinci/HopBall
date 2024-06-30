@@ -1,6 +1,5 @@
 using Runtime.Signals;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using Random = UnityEngine.Random;
 
 namespace Runtime.Physics
@@ -47,6 +46,13 @@ namespace Runtime.Physics
             {
                 CoreGameSignals.Instance.OnGameOver?.Invoke();
             }
+            
+            if(other.gameObject.CompareTag("Coin"))
+            {
+                CoreGameSignals.Instance.OnCollectCoin?.Invoke();
+                Debug.Log("Coin collected");
+                Destroy(other.gameObject);
+            }
         }
         
         private void OnGameOver()
@@ -57,7 +63,7 @@ namespace Runtime.Physics
         private void OnGameRestart()
         {
             _rigidbody.isKinematic = true;
-            transform.position = Vector3.zero;
+            transform.position = _initialPosition;
         }
 
         private void OnGameStart()

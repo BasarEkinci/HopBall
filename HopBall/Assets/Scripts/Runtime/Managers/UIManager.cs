@@ -50,7 +50,7 @@ namespace Runtime.Managers
             {
                 _currentScore = _score;
             }
-            scoreText.text = _currentScore.ToString();
+            scoreText.text = _currentScore.ToString() + "m";
         }
 
         private void OnDisable()
@@ -64,7 +64,7 @@ namespace Runtime.Managers
         public void RestartButton()
         {
             CoreGameSignals.Instance.OnGameRestart?.Invoke();
-            previousHighScoreTextTransform.position = new Vector3(-0.3f, _highScore, 0.8f);
+            previousHighScoreTextTransform.position = new Vector3(-0.6f, _highScore, 0.8f);
         }
 
         private void OnCollectCoin()
@@ -78,7 +78,7 @@ namespace Runtime.Managers
             gamePanel.SetActive(false);
             endGamePanel.SetActive(true);
             currentScoreText.text = "Skor : " + _currentScore;
-            highScoreText.text = "Rekor : " + _highScore;
+            highScoreText.text = "Rekor : " + PlayerPrefs.GetInt("HighScore") + "m";
         }
         private void OnGameRestart()
         {
@@ -106,6 +106,7 @@ namespace Runtime.Managers
             if (_score > _highScore)
             {
                 _highScore = _score;
+                PlayerPrefs.SetInt("HighScore", _score);
                 highScoreText.text = _highScore.ToString();
             }
         }

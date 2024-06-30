@@ -7,6 +7,9 @@ TagManager:
   - Box
   - LowerBound
   - Ball
+  - Coin
+  - Obstacle
+  - Wall
   layers:
   - Default
   - TransparentFX
