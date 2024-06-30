@@ -7,6 +7,7 @@ namespace Runtime.Physics
     public class BallPhysicsController : MonoBehaviour
     {
         [SerializeField] private float initialForceMagnitude = 5.0f;
+        [SerializeField] private float maxSpeed = 10.0f;
         [SerializeField] private ParticleSystem impactEffect;
         
         private Rigidbody _rigidbody;
@@ -30,6 +31,14 @@ namespace Runtime.Physics
             _initialPosition = transform.position;
             _rigidbody = GetComponent<Rigidbody>();
             _rigidbody.useGravity = false;
+        }
+        
+        private void FixedUpdate()
+        {
+            if (_rigidbody.velocity.magnitude > maxSpeed)
+            {
+                _rigidbody.velocity = _rigidbody.velocity.normalized * maxSpeed;
+            }
         }
 
         private void OnCollisionEnter(Collision other)
