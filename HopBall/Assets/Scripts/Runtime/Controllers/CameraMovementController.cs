@@ -20,13 +20,11 @@ namespace Runtime.Controllers
 
         private void OnEnable()
         {
-            CoreGameSignals.Instance.OnGameStart += OnGameStart;
             CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
         }
 
         private void OnDisable()
         {
-            CoreGameSignals.Instance.OnGameStart -= OnGameStart;
             CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;            
         }
 
@@ -73,10 +71,6 @@ namespace Runtime.Controllers
             camera.transform.position = _startPosition;
             boxes[1].transform.position = _rightBoxStartPosition;
             boxes[0].transform.position = _leftBoxStartPosition;
-        }
-
-        private void OnGameStart()
-        {
         }
     }
 }

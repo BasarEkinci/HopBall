@@ -1,26 +1,30 @@
 using UnityEngine;
 
-public class MonoSingelton<T> : MonoBehaviour where T : Component
+namespace Runtime.Extentions
 {
-    private static T _instance;
-    public static T Instance{
-        get
-        {
-            if(_instance == null)
+    public class MonoSingelton<T> : MonoBehaviour where T : Component
+    {
+        private static T _instance;
+        
+        public static T Instance{
+            get
             {
-                _instance = FindObjectOfType<T>();
                 if(_instance == null)
                 {
-                    GameObject obj = new GameObject();
-                    obj.name = typeof(T).Name;
-                    _instance = obj.AddComponent<T>();
+                    _instance = FindObjectOfType<T>();
+                    if(_instance == null)
+                    {
+                        GameObject obj = new GameObject();
+                        obj.name = typeof(T).Name;
+                        _instance = obj.AddComponent<T>();
+                    }
                 }
+                return _instance;
             }
-            return _instance;
         }
+        protected void Awake()
+        {
+            _instance = this as T;
+        }    
     }
-    protected void Awake()
-    {
-        _instance = this as T;
-    }    
 }

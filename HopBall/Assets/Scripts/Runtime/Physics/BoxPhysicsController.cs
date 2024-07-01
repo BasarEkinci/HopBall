@@ -45,7 +45,6 @@ namespace Runtime.Physics
                     new Vector3(forceDegree, 90, 0) *
                     (forceMagnitude + Mathf.Abs(_swipeVelocity.y * SwipeVelocityScale)));
             }
-
         }
 
         private void HandleTouchBegan(Touch touch)

@@ -1,3 +1,4 @@
+using System;
 using Runtime.Signals;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -12,7 +13,11 @@ namespace Runtime.Physics
         
         private Rigidbody _rigidbody;
         private Vector3 _initialPosition;
-        
+
+        private void Awake()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
+        }
         private void OnEnable()
         {
             CoreGameSignals.Instance.OnGameStart += OnGameStart;
@@ -25,11 +30,9 @@ namespace Runtime.Physics
             CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;
             CoreGameSignals.Instance.OnGameOver -= OnGameOver;
         }
-
         private void Start()
         {
             _initialPosition = transform.position;
-            _rigidbody = GetComponent<Rigidbody>();
             _rigidbody.useGravity = false;
         }
         
@@ -40,14 +43,12 @@ namespace Runtime.Physics
                 _rigidbody.velocity = _rigidbody.velocity.normalized * maxSpeed;
             }
         }
-
         private void OnCollisionEnter(Collision other)
         {
             impactEffect.transform.position = other.GetContact(0).point;
             impactEffect.transform.rotation = Quaternion.LookRotation(-other.GetContact(0).normal);
             impactEffect.Play();
         }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("LowerBound"))
@@ -58,22 +59,18 @@ namespace Runtime.Physics
             if(other.gameObject.CompareTag("Coin"))
             {
                 CoreGameSignals.Instance.OnCollectCoin?.Invoke();
-                Debug.Log("Coin collected");
                 Destroy(other.gameObject);
             }
         }
-        
         private void OnGameOver()
         {
             _rigidbody.useGravity = false;
         }
-
         private void OnGameRestart()
         {
             _rigidbody.isKinematic = true;
             transform.position = _initialPosition;
         }
-
         private void OnGameStart()
         {
             _rigidbody.useGravity = true;

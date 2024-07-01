@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Runtime.Signals;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -15,25 +14,6 @@ namespace Runtime.Utilities
         private float _initialX;
         private float _obstacleXpositionBound = 0.85f;
 
-        private void OnEnable()
-        {
-            CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
-        }
-
-        private void OnDisable()
-        {
-            CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;
-        }
-
-        private void OnGameRestart()
-        {
-            SetInitialPositionToObstacle();
-        }
-
-        private void Start()
-        {
-            SetInitialPositionToObstacle();
-        }
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("Obstacle"))
@@ -50,12 +30,18 @@ namespace Runtime.Utilities
                 Destroy(other.gameObject);
             }
         }
-        private void SetInitialPositionToObstacle()
+        internal void SetInitialPositionToObstacle()
         {
             _initialY = Random.Range(20, 35);
             _initialX = Random.Range(-_obstacleXpositionBound, _obstacleXpositionBound);
             obstacles[0].transform.position = new Vector3(_initialX, _initialY, 0);   
             obstacles[1].transform.position = new Vector3(_initialX, _initialY + Random.Range(15,25), 0);
+        }
+        
+        internal void ResetObstaclePosition()
+        {
+            obstacles[0].transform.position = Vector3.up * -10f;   
+            obstacles[1].transform.position = Vector3.up * -10f;
         }
     }
 }

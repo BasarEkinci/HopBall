@@ -23,34 +23,23 @@ namespace Runtime.Managers
         private int _highScore;
         private int _currentScore = 0;
         
-        private void OnEnable()
+         private void OnEnable()
         {
-            CoreGameSignals.Instance.OnGameStart += OnGameStart;
-            CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
-            CoreGameSignals.Instance.OnGameOver += OnGameOver;
-            CoreGameSignals.Instance.OnCollectCoin += OnCollectCoin;
+        CoreGameSignals.Instance.OnGameStart += OnGameStart;
+        CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
+        CoreGameSignals.Instance.OnGameOver += OnGameOver;
+        CoreGameSignals.Instance.OnCollectCoin += OnCollectCoin;
         }
 
         private void Start()
-        {
-            if(!gamePanel.activeSelf)
-                gamePanel.SetActive(true);
-            if(endGamePanel.activeSelf)
-                endGamePanel.SetActive(false);
-            _currentScore = 0;
-            _score = 0;
-            _coinAmount = 0;
+        { 
+            InitializeUI();
         }
 
         private void Update()
         {
-            SetHighScore();
-            _score = (int)ball.transform.position.y;
-            if (_score > _currentScore)
-            {
-                _currentScore = _score;
-            }
-            scoreText.text = _currentScore + "m";
+            UpdateScore();
+            UpdateScoreText();
         }
 
         private void OnDisable()
@@ -64,7 +53,7 @@ namespace Runtime.Managers
         public void RestartButton()
         {
             CoreGameSignals.Instance.OnGameRestart?.Invoke();
-            previousHighScoreTextTransform.position = new Vector3(-0.6f, _highScore, 0.8f);
+            UpdatePreviousHighScoreTextPosition();
         }
 
         private void OnCollectCoin()
@@ -75,40 +64,81 @@ namespace Runtime.Managers
 
         private void OnGameOver()
         {
-            gamePanel.SetActive(false);
-            endGamePanel.SetActive(true);
-            currentScoreText.text = "Skor : " + _currentScore;
-            highScoreText.text = "Rekor : " + PlayerPrefs.GetInt("HighScore") + "m";
+            ShowEndGamePanel();
+            UpdateEndGameScores();
         }
+
         private void OnGameRestart()
         {
-            if(!gamePanel.activeSelf)
-                gamePanel.SetActive(true);
-            
-            if(endGamePanel.activeSelf)
-                endGamePanel.SetActive(false);
-            
-            previousHighScoreText.text = _highScore + "m";
-            _score = 0;
-            _currentScore = 0;
+            ShowGamePanel();
+            ResetScores();
         }
-        private void OnGameStart() 
-        {
-            if(!gamePanel.activeSelf)
-                gamePanel.SetActive(true);
-            if(endGamePanel.activeSelf)
-                endGamePanel.SetActive(false);
 
+        private void OnGameStart()
+        {
+            ShowGamePanel();
             coinText.text = _coinAmount.ToString();
         }
+
+        private void InitializeUI()
+        {
+            gamePanel.SetActive(true);
+            endGamePanel.SetActive(false);
+            ResetScores();
+        }
+
+        private void UpdateScore()
+        {
+            _score = (int)ball.transform.position.y;
+            if (_score > _currentScore)
+            {
+                _currentScore = _score;
+            }
+            SetHighScore();
+        }
+
+        private void UpdateScoreText()
+        {
+            scoreText.text = _currentScore + "m";
+        }
+
         private void SetHighScore()
         {
             if (_score > _highScore)
             {
                 _highScore = _score;
-                PlayerPrefs.SetInt("HighScore", _score);
                 highScoreText.text = _highScore.ToString();
             }
+        }
+
+        private void UpdatePreviousHighScoreTextPosition()
+        {
+            previousHighScoreTextTransform.position = new Vector3(-0.6f, _highScore, 0.8f);
+        }
+
+        private void ShowEndGamePanel()
+        {
+            gamePanel.SetActive(false);
+            endGamePanel.SetActive(true);
+        }
+
+        private void ShowGamePanel()
+        {
+            gamePanel.SetActive(true);
+            endGamePanel.SetActive(false);
+        }
+
+        private void UpdateEndGameScores()
+        {
+            currentScoreText.text = $"Skor : {_currentScore}m";
+            highScoreText.text = $"Rekor :{_highScore}m";
+        }
+
+        private void ResetScores()
+        {
+            _score = 0;
+            _currentScore = 0;
+            previousHighScoreText.text = _highScore + "m";
         }
     }
 }
