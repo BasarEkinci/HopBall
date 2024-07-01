@@ -31,8 +31,6 @@ namespace Runtime.Controllers
             CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;
         }
 
-
-
         private void Update()
         {
             for (int i = 0; i < Input.touchCount; i++)

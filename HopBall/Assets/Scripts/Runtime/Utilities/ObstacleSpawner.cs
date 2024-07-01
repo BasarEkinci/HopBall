@@ -26,7 +26,6 @@ namespace Runtime.Utilities
 
             if (other.gameObject.CompareTag("Coin"))
             {
-                Debug.Log("Coin Hit");
                 Destroy(other.gameObject);
             }
         }
@@ -36,12 +35,6 @@ namespace Runtime.Utilities
             _initialX = Random.Range(-_obstacleXpositionBound, _obstacleXpositionBound);
             obstacles[0].transform.position = new Vector3(_initialX, _initialY, 0);   
             obstacles[1].transform.position = new Vector3(_initialX, _initialY + Random.Range(15,25), 0);
-        }
-        
-        internal void ResetObstaclePosition()
-        {
-            obstacles[0].transform.position = Vector3.up * -10f;   
-            obstacles[1].transform.position = Vector3.up * -10f;
         }
     }
 }

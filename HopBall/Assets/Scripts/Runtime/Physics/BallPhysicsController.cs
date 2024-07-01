@@ -11,12 +11,14 @@ namespace Runtime.Physics
         [SerializeField] private float maxSpeed = 10.0f;
         [SerializeField] private ParticleSystem impactEffect;
         
+        private Collider _collider;
         private Rigidbody _rigidbody;
         private Vector3 _initialPosition;
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<Collider>();
         }
         private void OnEnable()
         {
@@ -65,11 +67,13 @@ namespace Runtime.Physics
         private void OnGameOver()
         {
             _rigidbody.useGravity = false;
+            _collider.enabled = false;
         }
         private void OnGameRestart()
         {
             _rigidbody.isKinematic = true;
             transform.position = _initialPosition;
+            _collider.enabled = true;
         }
         private void OnGameStart()
         {
