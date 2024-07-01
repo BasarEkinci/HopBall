@@ -16,6 +16,7 @@ namespace Runtime.Controllers
         private readonly Dictionary<int, SelectedObjectData> _selectedObjects = new Dictionary<int, SelectedObjectData>();
         private int _selectedObjectCount = 0;
         private bool _isGameStarted = false;
+        
         private void Start()
         {
             _mainCamera = Camera.main;

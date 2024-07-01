@@ -65,7 +65,7 @@ namespace Runtime.Controllers
             boxes[1].transform.DOMoveX(3.5f,0.1f).SetEase(Ease.Linear);
             boxes[0].transform.DOMoveX(-3.5f,0.1f).SetEase(Ease.Linear);
         }
-
+        
         private Vector3 GetDesiredPosition()
         {
             return target.position + offset;

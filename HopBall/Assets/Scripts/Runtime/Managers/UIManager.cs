@@ -12,7 +12,6 @@ namespace Runtime.Managers
         [SerializeField] private Transform previousHighScoreTextTransform;
         
         [SerializeField] private TextMeshPro previousHighScoreText;
-
         [SerializeField] private TMP_Text coinText;
         [SerializeField] private TMP_Text scoreText;
         [SerializeField] private TMP_Text highScoreText;
@@ -25,10 +24,10 @@ namespace Runtime.Managers
         
          private void OnEnable()
         {
-        CoreGameSignals.Instance.OnGameStart += OnGameStart;
-        CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
-        CoreGameSignals.Instance.OnGameOver += OnGameOver;
-        CoreGameSignals.Instance.OnCollectCoin += OnCollectCoin;
+            CoreGameSignals.Instance.OnGameStart += OnGameStart;
+            CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
+            CoreGameSignals.Instance.OnGameOver += OnGameOver;
+            CoreGameSignals.Instance.OnCollectCoin += OnCollectCoin;
         }
 
         private void Start()

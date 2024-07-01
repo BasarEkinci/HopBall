@@ -9,10 +9,12 @@ namespace Runtime.Utilities
         [SerializeField] private GameObject coin;
         [SerializeField] private GameObject coinsParent;
         [SerializeField] private List<Transform> coinSpawnPoints;
+        
         private void Start()
         {
             InvokeRepeating(nameof(SpawnCoin), 0, 5f);
-        }        
+        }   
+        
         internal void ClearAllCoins()
         {
             foreach (Transform coinChild in coinsParent.transform)
@@ -20,6 +22,7 @@ namespace Runtime.Utilities
                 Destroy(coinChild.gameObject);
             }
         }
+        
         internal void SpawnCoin()
         {
             int coinChance = Random.Range(0, 100);

@@ -10,11 +10,11 @@ namespace Runtime.Physics
         private Vector2 _startTouchPosition;
         private Vector2 _currentTouchPosition;
         private Vector2 _previousTouchPosition;
+        private Vector2 _swipeVelocity;
+        
         private float _startTime;
         private float _previousTime;
         private const float SwipeVelocityScale = 0.0000001f;
-
-        private Vector2 _swipeVelocity; 
         
         private void Update()
         {

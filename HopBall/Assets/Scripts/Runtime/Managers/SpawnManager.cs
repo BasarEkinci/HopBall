@@ -15,19 +15,16 @@ namespace Runtime.Managers
             CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
             CoreGameSignals.Instance.OnGameStart += OnGameStart;
         }
-
         private void OnDisable()
         {
             CoreGameSignals.Instance.OnGameOver -= OnGameOver;
             CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;
             CoreGameSignals.Instance.OnGameStart -= OnGameStart;
         }
-
         private void OnGameOver()
         {
             obstacleSpawner.SetInitialPositionToObstacle();
         }
-
         private void OnGameRestart()
         {
             obstacleSpawner.SetInitialPositionToObstacle();

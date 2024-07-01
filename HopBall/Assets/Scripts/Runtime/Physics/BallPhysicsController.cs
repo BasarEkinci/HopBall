@@ -37,7 +37,6 @@ namespace Runtime.Physics
             _initialPosition = transform.position;
             _rigidbody.useGravity = false;
         }
-        
         private void FixedUpdate()
         {
             if (_rigidbody.velocity.magnitude > maxSpeed)

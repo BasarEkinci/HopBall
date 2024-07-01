@@ -9,7 +9,6 @@ namespace Runtime.Utilities
         [SerializeField] private GameObject coin;
         [SerializeField] private List<GameObject> obstacles;
         
-        
         private float _initialY;
         private float _initialX;
         private float _obstacleXpositionBound = 0.85f;
@@ -29,6 +28,7 @@ namespace Runtime.Utilities
                 Destroy(other.gameObject);
             }
         }
+        
         internal void SetInitialPositionToObstacle()
         {
             _initialY = Random.Range(20, 35);
