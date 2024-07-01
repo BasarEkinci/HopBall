@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using Runtime.Signals;
 using UnityEngine;
 
@@ -21,12 +22,16 @@ namespace Runtime.Controllers
         private void OnEnable()
         {
             CoreGameSignals.Instance.OnGameRestart += OnGameRestart;
+            CoreGameSignals.Instance.OnGameOver += OnGameOver;
         }
 
         private void OnDisable()
         {
-            CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;            
+            CoreGameSignals.Instance.OnGameRestart -= OnGameRestart;
+            CoreGameSignals.Instance.OnGameOver -= OnGameOver;
         }
+
+        
 
         private void Start()
         {
@@ -53,6 +58,12 @@ namespace Runtime.Controllers
                 Vector3 newPosition = GetNewPosition(desiredPosition, currentPosition);
                 camera.transform.position = Vector3.Lerp(currentPosition, newPosition, smoothSpeed);
             }
+        }
+        
+        private void OnGameOver()
+        {
+            boxes[1].transform.DOMoveX(3.5f,0.1f).SetEase(Ease.Linear);
+            boxes[0].transform.DOMoveX(-3.5f,0.1f).SetEase(Ease.Linear);
         }
 
         private Vector3 GetDesiredPosition()
